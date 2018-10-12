@@ -87,3 +87,69 @@ Example test_andb33: (andb3 true false true) = false.
 Proof. simpl. reflexivity. Qed.
 Example test_andb34: (andb3 true true false) = false.
 Proof. simpl. reflexivity. Qed.
+
+Check test_andb34.
+
+
+Module Factorial.
+
+
+Fixpoint factorial (n:nat) : nat :=
+  match n with
+    | O => 1
+    | S i => (S i) * factorial ((S i) - 1)     
+end.
+
+Example test_factorial1: (factorial 3) = 6.
+Proof. simpl. reflexivity. Qed.
+Example test_factorial2: (factorial 5) = (mult 10 12).
+Proof. simpl. reflexivity. Qed.
+
+Notation "x + y" := (plus x y)
+                      (at level 50, left associativity)
+                      : nat_scope.
+
+Check (0 + 3).
+
+End Factorial.
+
+Module blt_nat.
+
+Fixpoint beq_nat (n m : nat) : bool :=
+  match n with
+  | O => match m with
+             | O => true
+             | S i' => false
+              end
+  | S n' => match m with
+            | O => false
+            | S m' => beq_nat n' m'
+            end
+  end.
+
+Fixpoint leb (n m : nat) : bool :=
+  match n with
+  | O => true
+  | S n' =>
+      match m with
+      | 0 => false
+      | S m' => leb n' m'
+      end
+  end.
+
+Definition blt_nat (n m : nat) : bool :=
+  match beq_nat n m with
+  | true => false
+  | false => leb n m
+end.
+
+
+Example test_blt_nat1: (blt_nat 2 2) = false.
+Proof. simpl. reflexivity. Qed.
+Example test_blt_nat2: (blt_nat 2 4) = true.
+Proof. simpl. reflexivity. Qed.
+Example test_blt_nat3: (blt_nat 4 2) = false.
+Proof. simpl. reflexivity. Qed.
+
+
+End blt_nat.
