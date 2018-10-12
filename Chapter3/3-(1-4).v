@@ -151,5 +151,68 @@ Proof. simpl. reflexivity. Qed.
 Example test_blt_nat3: (blt_nat 4 2) = false.
 Proof. simpl. reflexivity. Qed.
 
-
 End blt_nat.
+
+Theorem plus_0_l : forall n : nat, 0 + n = n.
+Proof.
+  intros n. reflexivity. Qed.
+
+Theorem plus_1_l : forall n : nat, 1 + n = S n.
+Proof.
+  intros n. reflexivity. Qed.
+
+Theorem mult_0_l : forall n : nat, 0 * n = 0.
+Proof.
+  intros n. reflexivity. Qed.
+
+(* Theorem plus id example : forall (n m:nat), *)
+(* n = m → *)
+(* n + n = m + m. *)
+
+Theorem plus_id_example : forall n m : nat,
+    n = m -> n + n = m + m.
+Proof.
+  intros n m.
+  intros H.
+  rewrite <- H.
+  reflexivity.
+Qed.
+                    
+
+Theorem plus_id_exercise : forall n m o : nat,
+n = m -> m = o -> n + m = m + o.
+Proof.
+  intros n m o.
+  intros hnm hmo.
+  rewrite hnm.
+  rewrite <- hmo.
+  reflexivity.
+Qed.
+
+(* Theorem mult 0 plus : ∀ n m : nat, *)
+(* (0 + n) × m = n × m. *)
+(* Proof. *)
+(* intros n m. *)
+(* rewrite → plus O n. *)
+(* reflexivity. Qed. *)
+
+
+Theorem mult_0_plus : forall n m : nat,
+    (0 + n) * m = n * m.
+  Proof.
+    intros n m.
+    rewrite plus_O_n.
+    reflexivity.
+  Qed.
+
+Theorem mult_S_1 : forall n m : nat,
+    m = S n ->
+    m * (1 + n) = m * m.
+Proof.
+  intros n m.
+  intros hmsn.
+  rewrite plus_1_l.
+  rewrite hmsn.
+  reflexivity.
+Qed.
+
