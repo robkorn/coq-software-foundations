@@ -357,7 +357,7 @@ Inductive bin : Type :=
 Fixpoint incr (n : bin) : bin :=
   match n with
   | Zip => SDos Zip
-  | Dos i => Dos n
+  | Dos i => SDos i
   | SDos i => Dos (incr i)
 end.
 
@@ -380,5 +380,5 @@ Proof. simpl. reflexivity. Qed.
 Definition test_bin_incr_4 : bin_to_nat (incr (incr Zip)) = S ( S (bin_to_nat Zip)).
 Proof. simpl. reflexivity. Qed.
 
-Definition test_bin_incr_5 : bin_to_nat (incr (incr (incr ( SDos Zip)))) = 8.
+Definition test_bin_incr_5 : bin_to_nat (incr (incr (incr ( SDos Zip)))) = 4.
 Proof. simpl. reflexivity. Qed.

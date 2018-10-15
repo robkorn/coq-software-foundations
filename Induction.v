@@ -120,7 +120,21 @@ Proof.
   - rewrite mult_0_l. rewrite mult_0_r. reflexivity.
   - rewrite <- mult_n_Sm. rewrite mult_Sm_n. reflexivity. Qed.
 
+(* bin to nat pres incr  *)
 
-                   
-
-
+Theorem bin_to_nat_pres_incr : forall m : bin,
+    bin_to_nat (incr m) = bin_to_nat m + 1.
+Proof.
+  induction m as [|dm IHdm|sdm IHsdm].
+  - simpl. reflexivity.
+  - simpl. rewrite <- plus_n_O. reflexivity.
+  - simpl. repeat (rewrite <- plus_n_O).
+    rewrite IHsdm.
+    symmetry.
+    rewrite <- plus_assoc.
+    rewrite <- plus_assoc.
+    rewrite <- plus_assoc.
+    rewrite plus_Sn_m. simpl.
+    rewrite plus_n_Sm. reflexivity.
+Qed.
+     
