@@ -788,7 +788,7 @@ Proof.
     involving [foo].  For example, try uncommenting the following line
     to see a list of theorems that we have proved about [rev]: *)
 
-(*  Search rev. *)
+ (* Search rev. *)
 
 (** Keep [Search] in mind as you do the following exercises and
     throughout the rest of the book; it can save you a lot of time!
@@ -806,17 +806,27 @@ Proof.
 Theorem app_nil_r : forall l : natlist,
   l ++ [] = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l.
+  induction l as [|l' IHl'].
+  - reflexivity.
+  - simpl. rewrite IHIHl'. reflexivity. Qed.
 
 Theorem rev_app_distr: forall l1 l2 : natlist,
   rev (l1 ++ l2) = rev l2 ++ rev l1.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l1 l2.
+  induction l1 as [|l' IHl'].
+  - simpl. rewrite app_nil_r. reflexivity.
+  - simpl. rewrite IHIHl'. rewrite app_assoc. reflexivity. Qed.
+
 
 Theorem rev_involutive : forall l : natlist,
   rev (rev l) = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l.
+  induction l as [|l' IHl'].
+  - reflexivity.
+  - simpl. rewrite rev_app_distr. rewrite IHIHl'. simpl. reflexivity. Qed.
 
 (** There is a short solution to the next one.  If you find yourself
     getting tangled up, step back and try to look for a simpler
@@ -825,41 +835,59 @@ Proof.
 Theorem app_assoc4 : forall l1 l2 l3 l4 : natlist,
   l1 ++ (l2 ++ (l3 ++ l4)) = ((l1 ++ l2) ++ l3) ++ l4.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l1 l2 l3 l4.
+  repeat rewrite app_assoc. reflexivity. Qed.
+  
 
 (** An exercise about your implementation of [nonzeros]: *)
 
 Lemma nonzeros_app : forall l1 l2 : natlist,
   nonzeros (l1 ++ l2) = (nonzeros l1) ++ (nonzeros l2).
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  intros l1 l2.
+  induction l1 as [|l' IHl'].
+  - simpl. reflexivity.
+  - induction l' as [|l'' IHl''].
+    + simpl. rewrite IHIHl'. reflexivity.
+    + simpl. rewrite IHIHl'. reflexivity. Qed.
 
 (** **** Exercise: 2 stars (beq_natlist)  *)
 (** Fill in the definition of [beq_natlist], which compares
     lists of numbers for equality.  Prove that [beq_natlist l l]
     yields [true] for every list [l]. *)
 
-Fixpoint beq_natlist (l1 l2 : natlist) : bool
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Fixpoint beq_natlist (l1 l2 : natlist) : bool :=
+  match l1 with
+  | [] => if (length l2) =? 0 then true else false
+  | x :: xs => match l2 with
+               | [] => false
+               | y :: ys => if eqb x y then beq_natlist xs ys else false
+               end
+  end.
 
+                     
 Example test_beq_natlist1 :
   (beq_natlist nil nil = true).
- (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 Example test_beq_natlist2 :
   beq_natlist [1;2;3] [1;2;3] = true.
-(* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 Example test_beq_natlist3 :
   beq_natlist [1;2;3] [1;2;4] = false.
- (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 Theorem beq_natlist_refl : forall l:natlist,
   true = beq_natlist l l.
-Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+Proof. 
+  intros l.
+  induction l as [|l' IHl'].
+  - reflexivity.
+  - simpl. rewrite <- IHIHl'. induction l'.
+    + reflexivity.
+    + simpl. rewrite <- IHl'0. reflexivity. Qed.
+
 
 (* ================================================================= *)
 (** ** List Exercises, Part 2 *)
@@ -867,7 +895,7 @@ Proof.
 (** Here are a couple of little theorems to prove about your
     definitions about bags above. *)
 
-(** **** Exercise: 1 star (count_member_nonzero)  *)
+
 Theorem count_member_nonzero : forall (s : bag),
   leb 1 (count 1 (1 :: s)) = true.
 Proof.

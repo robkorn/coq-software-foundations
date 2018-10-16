@@ -232,6 +232,18 @@ Fixpoint beq_nat (n m : nat) : bool :=
             end
 end.
 
+Theorem beq_nat_refl : forall n : nat,
+  true = beq_nat n n.
+  Proof.
+    intro n.
+    induction n.
+    reflexivity.
+    simpl.
+    rewrite <- IHn.
+    reflexivity.
+Qed.
+
+
 Module caseanyl.
 (* Theorem plus 1 neq 0 : ∀ n : nat, *)
 (* beq nat (n + 1) 0 = false. *)
