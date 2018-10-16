@@ -137,4 +137,3 @@ Proof.
     rewrite plus_Sn_m. simpl.
     rewrite plus_n_Sm. reflexivity.
 Qed.
-     
